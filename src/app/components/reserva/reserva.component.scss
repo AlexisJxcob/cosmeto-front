@@ -1,0 +1,213 @@
+// ==========================================
+// ESTILOS JAPANDI PARA RESERVA DE TURNOS
+// ==========================================
+
+// Variables de color (puedes moverlas a styles.scss si las usas globalmente)
+$color-fondo: #faf7f2;        // crema muy claro
+$color-superficie: #ffffff;   // blanco roto
+$color-texto: #4a4a4a;        // gris oscuro suave
+$color-texto-secundario: #7a7a7a;
+$color-borde: #e0dcd3;        // beige grisáceo
+$color-acento: #a8b5a0;       // verde salvia suave
+$color-acento-hover: #8f9e87;
+$color-madera: #c8b49a;       // tono madera clara
+$sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.05);
+$radio-borde: 12px;
+
+// Contenedor principal de toda la página
+.reserva-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: $color-fondo;
+  border-radius: $radio-borde;
+  box-shadow: $sombra-suave;
+}
+
+// Contenedor de cada paso (se usa en los tres pasos)
+.paso-container {
+  margin-top: 2rem;
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: $color-texto;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+}
+
+// ============ PASO 1: GRID DE SERVICIOS ============
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+// Tarjeta de servicio (personalización de p-card)
+.servicio-card {
+  border: 1px solid $color-borde;
+  border-radius: $radio-borde;
+  background-color: $color-superficie;
+  box-shadow: $sombra-suave;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  // Encabezado de la tarjeta
+  ::ng-deep .p-card-header {
+    h3 {
+      margin: 0;
+      padding: 1rem 1.25rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $color-texto;
+      background-color: lighten($color-acento, 35%);
+      border-bottom: 1px solid $color-borde;
+      border-radius: $radio-borde $radio-borde 0 0;
+    }
+  }
+
+  // Cuerpo
+  ::ng-deep .p-card-body {
+    padding: 1.25rem;
+    p {
+      margin: 0.5rem 0;
+      color: $color-texto-secundario;
+      line-height: 1.5;
+    }
+  }
+
+  // Pie con botón
+  ::ng-deep .p-card-footer {
+    padding: 0 1.25rem 1.25rem;
+  }
+}
+
+// ============ PASO 2: CALENDARIO Y BOTONES ============
+.fecha-hora {
+  margin-bottom: 2rem;
+  p-calendar {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+// Contenedor de botones de navegación (usado en pasos 2 y 3)
+.botones-navegacion {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end; // alinear a la derecha
+}
+
+// ============ PASO 3: RESUMEN Y FORMULARIO ============
+// Tarjeta de resumen (p-card)
+::ng-deep p-card.resumen-card {
+  border: 1px solid $color-borde;
+  border-radius: $radio-borde;
+  background-color: $color-superficie;
+  margin-bottom: 2rem;
+  .p-card-header {
+    h3 {
+      margin: 0;
+      padding: 1rem 1.25rem;
+      background-color: lighten($color-madera, 25%);
+      border-bottom: 1px solid $color-borde;
+      border-radius: $radio-borde $radio-borde 0 0;
+      color: $color-texto;
+    }
+  }
+  .p-card-body {
+    padding: 1.25rem;
+    p {
+      margin: 0.5rem 0;
+      color: $color-texto-secundario;
+    }
+  }
+}
+
+// Formulario de contacto
+.formulario-contacto {
+  margin: 2rem 0;
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $color-texto;
+    margin-bottom: 1rem;
+  }
+  .campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+    label {
+      font-size: 0.95rem;
+      color: $color-texto-secundario;
+      margin-bottom: 0.3rem;
+    }
+    input {
+      padding: 0.8rem 1rem;
+      border: 1px solid $color-borde;
+      border-radius: 8px;
+      background-color: $color-superficie;
+      color: $color-texto;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      &:focus {
+        outline: none;
+        border-color: $color-acento;
+        box-shadow: 0 0 0 2px rgba($color-acento, 0.2);
+      }
+    }
+  }
+}
+
+// ============ AJUSTES A COMPONENTES PRIMENG ============
+// Estilo general de botones (p-button)
+::ng-deep .p-button {
+  background-color: $color-acento;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.1s;
+  &:hover {
+    background-color: $color-acento-hover;
+    transform: translateY(-1px);
+  }
+}
+
+// Estilo para p-steps (indicador de pasos)
+::ng-deep .p-steps {
+  .p-steps-item {
+    .p-menuitem-link {
+      background: transparent;
+      .p-steps-number {
+        background-color: $color-borde;
+        color: $color-texto;
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+      .p-steps-title {
+        color: $color-texto-secundario;
+      }
+    }
+    &.p-highlight {
+      .p-steps-number {
+        background-color: $color-acento;
+        color: white;
+      }
+      .p-steps-title {
+        color: $color-acento-hover;
+        font-weight: 600;
+      }
+    }
+  }
+}
