@@ -5,30 +5,24 @@ import { FormsModule } from '@angular/forms';
 // Módulos de PrimeNG
 import { StepsModule } from 'primeng/steps';
 import { CardModule } from 'primeng/card';
-import { DatePicker } from 'primeng/datepicker'; // Si usas PrimeNG 18+ (o reemplaza por CalendarModule desde 'primeng/calendar' si usas v17)
+import { DatePicker } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 
-// Modelos corregidos
+// Modelos
 import { Servicio } from '../../models/service.model';
 import { Turno, Cliente } from '../../models/turno.model';
+
+// Servicio HTTP
+import { ReservaService } from '../../services/reserva.service';
 
 @Component({
   selector: 'app-reserva',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    StepsModule,
-    CardModule,
-    DatePicker, // Coincide con el import de arriba
-    ButtonModule,
-  ],
+  imports: [CommonModule, FormsModule, StepsModule, CardModule, DatePicker, ButtonModule],
   templateUrl: './reserva.component.html',
-  styleUrls: ['./reserva.component.scss'], // Extensión corregida a .scss
+  styleUrls: ['./reserva.component.scss'],
 })
 export class ReservaComponent implements OnInit {
-  // ---------- Estado del componente ----------
-
   currentStep: number = 0;
 
   servicios: Servicio[] = [
@@ -72,7 +66,8 @@ export class ReservaComponent implements OnInit {
     { label: 'Confirmación' },
   ];
 
-  constructor() {}
+  // Inyección del servicio HTTP
+  constructor(private reservaService: ReservaService) {}
 
   ngOnInit(): void {}
 
@@ -123,10 +118,18 @@ export class ReservaComponent implements OnInit {
       cliente: this.cliente,
     };
 
-    console.log('Reserva confirmada:', turno);
-    alert('¡Reserva confirmada con éxito!');
-
-    this.resetForm();
+    // Envío de la reserva al backend vía HTTP POST
+    this.reservaService.crearReserva(turno).subscribe({
+      next: (respuesta) => {
+        console.log('Reserva guardada en backend:', respuesta);
+        alert('¡Reserva confirmada con éxito!');
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Error al guardar la reserva:', err);
+        alert('Hubo un error al conectar con el servidor.');
+      },
+    });
   }
 
   resetForm(): void {
