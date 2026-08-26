@@ -1,0 +1,94 @@
+<!-- Contenedor principal con ancho máximo y centrado -->
+<div class="reserva-container">
+  <!-- Pasos (indicador de progreso) -->
+  <p-steps [model]="steps" [activeIndex]="currentStep" [readonly]="true"></p-steps>
+
+  <!-- ==================== PASO 1: SELECCIÓN DE SERVICIO ==================== -->
+  <div *ngIf="currentStep === 0" class="paso-container">
+    <h2>Selecciona un servicio</h2>
+    <div class="servicios-grid">
+      <!-- Iteramos sobre la lista de servicios para mostrar una tarjeta por cada uno -->
+      <p-card *ngFor="let servicio of servicios" class="servicio-card">
+        <!-- Encabezado de la tarjeta con nombre y precio -->
+        <ng-template pTemplate="header">
+          <h3>{{ servicio.nombre }}</h3>
+        </ng-template>
+        <!-- Cuerpo de la tarjeta con descripción y duración -->
+        <p>{{ servicio.descripcion }}</p>
+        <p><strong>Duración:</strong> {{ servicio.duracionMinutos }} min</p>
+        <p><strong>Precio:</strong> ${{ servicio.precio }}</p>
+        <!-- Botón para seleccionar el servicio y avanzar -->
+        <ng-template pTemplate="footer">
+          <p-button
+            label="Seleccionar"
+            icon="pi pi-check"
+            (onClick)="seleccionarServicio(servicio)">
+          </p-button>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- ==================== PASO 2: SELECCIÓN DE FECHA Y HORA ==================== -->
+  <div *ngIf="currentStep === 1" class="paso-container">
+    <h2>Elige fecha y hora</h2>
+    <div class="fecha-hora">
+      <!-- Componente p-datepicker configurado para fecha y hora con intervalos de 30 min -->
+      <p-datepicker
+        [(ngModel)]="selectedDate"
+        [showTime]="true"
+        [stepMinute]="30"
+        [minDate]="minDate"
+        dateFormat="dd/mm/yy"
+        [showIcon]="true"
+        placeholder="Selecciona fecha y hora"
+      ></p-datepicker>
+    </div>
+    <!-- Botones para volver o continuar -->
+    <div class="botones-navegacion">
+      <p-button label="Volver" icon="pi pi-arrow-left" (onClick)="prevStep()"></p-button>
+      <p-button label="Continuar" icon="pi pi-arrow-right" (onClick)="nextStep()"></p-button>
+    </div>
+  </div>
+
+  <!-- ==================== PASO 3: RESUMEN Y DATOS DE CONTACTO ==================== -->
+  <div *ngIf="currentStep === 2" class="paso-container">
+    <h2>Resumen y datos de contacto</h2>
+    <!-- Tarjeta de resumen (usamos p-card para mostrar la información) -->
+    <p-card>
+      <ng-template pTemplate="header">
+        <h3>Resumen de tu reserva</h3>
+      </ng-template>
+      <!-- Mostramos los datos seleccionados (si existen) -->
+      <div *ngIf="selectedServicio && selectedDate">
+        <p><strong>Servicio:</strong> {{ selectedServicio.nombre }}</p>
+        <p><strong>Duración:</strong> {{ selectedServicio.duracionMinutos }} min</p>
+        <p><strong>Precio:</strong> ${{ selectedServicio.precio }}</p>
+        <p><strong>Fecha y hora:</strong> {{ selectedDate | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </p-card>
+
+    <!-- Formulario de datos de contacto (usamos ngModel para enlazar) -->
+    <div class="formulario-contacto">
+      <h3>Datos de contacto</h3>
+      <div class="campo">
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" type="text" [(ngModel)]="cliente.nombre" placeholder="Tu nombre" required>
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono:</label>
+        <input id="telefono" type="tel" [(ngModel)]="cliente.telefono" placeholder="Tu teléfono" required>
+      </div>
+      <div class="campo">
+        <label for="email">Email:</label>
+        <input id="email" type="email" [(ngModel)]="cliente.email" placeholder="Tu email" required>
+      </div>
+    </div>
+
+    <!-- Botones de navegación y confirmación -->
+    <div class="botones-navegacion">
+      <p-button label="Volver" icon="pi pi-arrow-left" (onClick)="prevStep()"></p-button>
+      <p-button label="Confirmar Reserva" icon="pi pi-check" (onClick)="confirmarReserva()"></p-button>
+    </div>
+  </div>
+</div>
