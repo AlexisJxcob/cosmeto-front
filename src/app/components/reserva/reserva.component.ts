@@ -45,6 +45,8 @@ export class ReservaComponent {
       descripcion: 'Limpieza profunda con extracción de impurezas y mascarilla.',
       duracionMinutos: 60,
       precio: 25000,
+      imagen:
+        'https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?auto=format&fit=crop&w=600&q=80',
     },
     {
       id: 2,
@@ -52,6 +54,8 @@ export class ReservaComponent {
       descripcion: 'Tratamiento intensivo para hidratar y revitalizar la piel.',
       duracionMinutos: 45,
       precio: 18000,
+      imagen:
+        'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80',
     },
     {
       id: 3,
@@ -59,6 +63,8 @@ export class ReservaComponent {
       descripcion: 'Diseño y perfilado de cejas según la morfología del rostro.',
       duracionMinutos: 30,
       precio: 8000,
+      imagen:
+        'https://images.unsplash.com/photo-1588665050864-4e9dfd0e655d?auto=format&fit=crop&w=600&q=80',
     },
   ];
 
