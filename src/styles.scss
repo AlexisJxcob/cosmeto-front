@@ -1,3 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 /* Estilos globales */
 @import "primeicons/primeicons.css";
+
+/* Ocultar banner de licencia de PrimeUI */
+/* Ocultar banner de licencia inyectado por PrimeUI */
+#p-license-host {
+  display: none !important;
+}
+
+/* src/styles.scss */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family, sans-serif);
+  background-color: #f4f3ef; /* Beige/Gris cálido muy suave */
+  color: #1f2320;
+  min-height: 100vh;
+}

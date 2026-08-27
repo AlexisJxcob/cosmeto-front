@@ -10,6 +10,6 @@ export interface Cliente {
 // Interface que representa un turno/reserva completo
 export interface Turno {
   servicio: Servicio; // Servicio seleccionado
-  fechaHora: Date; // Fecha y hora elegida
+  fechaHora: Date | null; // Fecha y hora elegida
   cliente: Cliente; // Datos del cliente
 }

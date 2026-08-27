@@ -1,31 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Módulos de PrimeNG
+// PrimeNG Imports
 import { StepsModule } from 'primeng/steps';
 import { CardModule } from 'primeng/card';
-import { DatePicker } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
+import { DatePickerModule } from 'primeng/datepicker';
+import { MenuItem } from 'primeng/api';
 
-// Modelos
-import { Servicio } from '../../models/service.model';
-import { Turno, Cliente } from '../../models/turno.model';
-
-// Servicio HTTP
 import { ReservaService } from '../../services/reserva.service';
+import { Turno } from '../../models/turno.model';
 
 @Component({
   selector: 'app-reserva',
   standalone: true,
-  imports: [CommonModule, FormsModule, StepsModule, CardModule, DatePicker, ButtonModule],
+  imports: [CommonModule, FormsModule, StepsModule, CardModule, ButtonModule, DatePickerModule],
   templateUrl: './reserva.component.html',
-  styleUrls: ['./reserva.component.scss'],
+  styleUrl: './reserva.component.scss',
 })
-export class ReservaComponent implements OnInit {
-  currentStep: number = 0;
+export class ReservaComponent {
+  // Estado con Signals
+  pasoActual = signal<number>(0);
+  servicioSeleccionado = signal<any>(null);
+  fechaHoraSeleccionada = signal<Date | null>(null);
 
-  servicios: Servicio[] = [
+  // Formulario cliente
+  nombreCliente = signal<string>('');
+  telefonoCliente = signal<string>('');
+  emailCliente = signal<string>('');
+
+  // Ítems de navegación de PrimeNG Steps
+  pasosItems: MenuItem[] = [
+    { label: 'Servicio' },
+    { label: 'Fecha y Hora' },
+    { label: 'Confirmación' },
+  ];
+
+  // Datos mock de servicios
+  servicios = [
     {
       id: 1,
       nombre: 'Limpieza Facial Profunda',
@@ -35,7 +48,7 @@ export class ReservaComponent implements OnInit {
     },
     {
       id: 2,
-      nombre: 'Hidratación Facial',
+      nombre: 'Tratamiento Hidratante',
       descripcion: 'Tratamiento intensivo para hidratar y revitalizar la piel.',
       duracionMinutos: 45,
       precio: 18000,
@@ -49,93 +62,50 @@ export class ReservaComponent implements OnInit {
     },
   ];
 
-  selectedServicio: Servicio | null = null;
-  selectedDate: Date | null = null;
-
-  cliente: Cliente = {
-    nombre: '',
-    telefono: '',
-    email: '',
-  };
-
-  minDate: Date = new Date();
-
-  steps: { label: string }[] = [
-    { label: 'Servicio' },
-    { label: 'Fecha y Hora' },
-    { label: 'Confirmación' },
-  ];
-
-  // Inyección del servicio HTTP
   constructor(private reservaService: ReservaService) {}
 
-  ngOnInit(): void {}
+  seleccionarServicio(servicio: any) {
+    this.servicioSeleccionado.set(servicio);
+    this.pasoActual.set(1);
+  }
 
-  // ---------- Navegación ----------
-
-  nextStep(): void {
-    if (this.currentStep === 0 && !this.selectedServicio) {
-      alert('Por favor selecciona un servicio.');
-      return;
-    }
-    if (this.currentStep === 1 && !this.selectedDate) {
-      alert('Por favor selecciona una fecha y hora.');
-      return;
-    }
-    if (this.currentStep < 2) {
-      this.currentStep++;
+  siguientePaso() {
+    if (this.pasoActual() < 2) {
+      this.pasoActual.update((p) => p + 1);
     }
   }
 
-  prevStep(): void {
-    if (this.currentStep > 0) {
-      this.currentStep--;
+  pasoAnterior() {
+    if (this.pasoActual() > 0) {
+      this.pasoActual.update((p) => p - 1);
     }
   }
 
-  seleccionarServicio(servicio: Servicio): void {
-    this.selectedServicio = servicio;
-    this.nextStep();
-  }
-
-  confirmarReserva(): void {
-    if (!this.selectedServicio || !this.selectedDate) {
-      alert('Faltan datos de la reserva.');
-      return;
-    }
-    if (
-      !this.cliente.nombre.trim() ||
-      !this.cliente.telefono.trim() ||
-      !this.cliente.email.trim()
-    ) {
-      alert('Por favor completa todos los datos de contacto.');
-      return;
-    }
-
-    const turno: Turno = {
-      servicio: this.selectedServicio,
-      fechaHora: this.selectedDate,
-      cliente: this.cliente,
+  confirmarReserva() {
+    const nuevaReserva: Turno = {
+      servicio: this.servicioSeleccionado(),
+      fechaHora: this.fechaHoraSeleccionada(),
+      cliente: {
+        nombre: this.nombreCliente(),
+        telefono: this.telefonoCliente(),
+        email: this.emailCliente(),
+      },
     };
 
-    // Envío de la reserva al backend vía HTTP POST
-    this.reservaService.crearReserva(turno).subscribe({
-      next: (respuesta) => {
-        console.log('Reserva guardada en backend:', respuesta);
-        alert('¡Reserva confirmada con éxito!');
-        this.resetForm();
+    this.reservaService.crearReserva(nuevaReserva).subscribe({
+      next: (res) => {
+        alert('¡Reserva realizada con éxito!');
+        // Resetear flujo
+        this.pasoActual.set(0);
+        this.servicioSeleccionado.set(null);
+        this.fechaHoraSeleccionada.set(null);
+        this.nombreCliente.set('');
+        this.telefonoCliente.set('');
+        this.emailCliente.set('');
       },
       error: (err) => {
-        console.error('Error al guardar la reserva:', err);
-        alert('Hubo un error al conectar con el servidor.');
+        console.error('Error al reservar:', err);
       },
     });
-  }
-
-  resetForm(): void {
-    this.currentStep = 0;
-    this.selectedServicio = null;
-    this.selectedDate = null;
-    this.cliente = { nombre: '', telefono: '', email: '' };
   }
 }
