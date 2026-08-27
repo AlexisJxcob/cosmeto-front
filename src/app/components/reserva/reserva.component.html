@@ -10,23 +10,37 @@
     <p-steps [model]="pasosItems" [activeIndex]="pasoActual()"></p-steps>
   </div>
 
-  <!-- ... resto de tus @if (pasoActual() === x) ... -->
-  <!-- PASO 1: Selección de Servicio -->
+  <!-- ========================================== -->
+  <!-- PASO 1: SELECCIÓN DE SERVICIO              -->
+  <!-- ========================================== -->
   @if (pasoActual() === 0) {
-    <div class="paso-container">
-      <h2>Selecciona un servicio</h2>
+    <div class="paso-container fade-in-up">
       <div class="servicios-grid">
         @for (servicio of servicios; track servicio.id) {
           <div
             class="servicio-card-wrapper"
             (click)="seleccionarServicio(servicio)"
-            style="cursor: pointer;"
+            tabindex="0"
+            role="button"
           >
-            <p-card [header]="servicio.nombre" class="servicio-card">
-              <p>{{ servicio.descripcion }}</p>
-              <p><strong>Duración:</strong> {{ servicio.duracionMinutos }} min</p>
-              <p><strong>Precio:</strong> ${{ servicio.precio }}</p>
+            <p-card class="servicio-card">
+              <!-- Imagen en la cabecera -->
+              <ng-template pTemplate="header">
+                <div class="img-wrapper">
+                  <img [src]="servicio.imagen" [alt]="servicio.nombre" class="card-imagen" />
+                </div>
+              </ng-template>
 
+              <!-- Contenido principal -->
+              <h3 class="card-titulo">{{ servicio.nombre }}</h3>
+              <p class="card-desc">{{ servicio.descripcion }}</p>
+
+              <div class="card-meta">
+                <span class="info-pildora"><i class="pi pi-clock"></i> {{ servicio.duracionMinutos }} min</span>
+                <span class="info-pildora"><i class="pi pi-tag"></i> ${{ servicio.precio }}</span>
+              </div>
+
+              <!-- Pie de tarjeta -->
               <ng-template pTemplate="footer">
                 <p-button
                   label="Seleccionar"
@@ -41,9 +55,11 @@
     </div>
   }
 
-  <!-- PASO 2: Fecha y Hora -->
+  <!-- ========================================== -->
+  <!-- PASO 2: FECHA Y HORA                       -->
+  <!-- ========================================== -->
   @if (pasoActual() === 1) {
-    <div class="paso-container">
+    <div class="paso-container fade-in-up">
       <h2>Selecciona Fecha y Hora</h2>
       <div class="fecha-hora">
         <p-datepicker
@@ -66,12 +82,15 @@
     </div>
   }
 
-  <!-- PASO 3: Confirmación y Contacto -->
+  <!-- ========================================== -->
+  <!-- PASO 3: CONFIRMACIÓN Y CONTACTO            -->
+  <!-- ========================================== -->
   @if (pasoActual() === 2) {
-    <div class="paso-container">
+    <div class="paso-container fade-in-up">
       <h2>Confirmación de Turno</h2>
 
-      <p-card header="Resumen del Servicio" class="resumen-card">
+      <p-card class="resumen-card">
+        <h3 class="p-card-title">Resumen del Servicio</h3>
         <p><strong>Servicio:</strong> {{ servicioSeleccionado()?.nombre }}</p>
         <p><strong>Fecha:</strong> {{ fechaHoraSeleccionada() | date:'short' }}</p>
         <p><strong>Precio:</strong> ${{ servicioSeleccionado()?.precio }}</p>
@@ -81,7 +100,7 @@
         <h3>Tus Datos</h3>
         <div class="campo">
           <label for="nombre">Nombre completo</label>
-          <input id="nombre" type="text" [(ngModel)]="nombreCliente" placeholder="Ej: Maria Perez" />
+          <input id="nombre" type="text" [(ngModel)]="nombreCliente" placeholder="Ej: María Pérez" />
         </div>
         <div class="campo">
           <label for="telefono">Teléfono</label>
