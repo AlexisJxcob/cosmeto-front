@@ -4,7 +4,7 @@
 
 @use "sass:color";
 
-// Variables de color (puedes moverlas a styles.scss si las usas globalmente)
+// Variables de color
 $color-fondo: #faf7f2;        // crema muy claro
 $color-superficie: #ffffff;   // blanco roto
 $color-texto: #4a4a4a;        // gris oscuro suave
@@ -66,7 +66,7 @@ $radio-borde: 12px;
       font-size: 1.25rem;
       font-weight: 600;
       color: $color-texto;
-      background-color: lighten($color-acento, 35%);
+      background-color: color.adjust($color-acento, $lightness: 35%);
       border-bottom: 1px solid $color-borde;
       border-radius: $radio-borde $radio-borde 0 0;
     }
@@ -91,6 +91,7 @@ $radio-borde: 12px;
 // ============ PASO 2: CALENDARIO Y BOTONES ============
 .fecha-hora {
   margin-bottom: 2rem;
+  p-datepicker,
   p-calendar {
     width: 100%;
     max-width: 400px;
@@ -102,7 +103,7 @@ $radio-borde: 12px;
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
-  justify-content: flex-end; // alinear a la derecha
+  justify-content: flex-end;
 }
 
 // ============ PASO 3: RESUMEN Y FORMULARIO ============
@@ -116,7 +117,7 @@ $radio-borde: 12px;
     h3 {
       margin: 0;
       padding: 1rem 1.25rem;
-      background-color: lighten($color-madera, 25%);
+      background-color: color.adjust($color-madera, $lightness: 25%);
       border-bottom: 1px solid $color-borde;
       border-radius: $radio-borde $radio-borde 0 0;
       color: $color-texto;
